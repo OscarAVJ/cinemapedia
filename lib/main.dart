@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cinemapedia/config/router/router_app.dart';
 import 'package:cinemapedia/config/theme/theme_app.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  //Gracias a el paquete flutterdotenv podemos acceder a nuestras variables de entorno
+  await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
 
