@@ -1,5 +1,7 @@
-import 'package:cinemapedia/config/constants/environment.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:cinemapedia/presentation/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends StatelessWidget {
   static const name = 'home_screen';
@@ -9,9 +11,42 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(Environment.movieDbKey),
-      ),
+      body: _HomeView(),
+      bottomNavigationBar: CustomBottomNavigationbar(),
+    );
+  }
+}
+
+//Creamos nuestro statefull widget y luego lo pasamos a consumer para poder acceder a Riverpod
+class _HomeView extends ConsumerStatefulWidget {
+  const _HomeView();
+
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends ConsumerState<_HomeView> {
+  @override
+  void initState() {
+    ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final nowPlayingMovies = ref.watch(nowPlayinMoviesProvider);
+    final slideShowMovies = ref.watch(moviesSlideshowProvider);
+    return Column(
+      children: [
+        CustomAppbar(),
+        //Expanded hace que ya una ves teniendo nuestro padre, envuelve esto listvie a la altura y anchura necesaria
+        MoviesSlideshow(movies: slideShowMovies),
+        MovieHorizontalListview(
+          movies: nowPlayingMovies,
+          title: 'En cines',
+          subTitle: 'Lunes',
+        ),
+      ],
     );
   }
 }
