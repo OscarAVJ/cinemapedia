@@ -36,17 +36,40 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   Widget build(BuildContext context) {
     final nowPlayingMovies = ref.watch(nowPlayinMoviesProvider);
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
-    return Column(
-      children: [
-        CustomAppbar(),
-        //Expanded hace que ya una ves teniendo nuestro padre, envuelve esto listvie a la altura y anchura necesaria
-        MoviesSlideshow(movies: slideShowMovies),
-        MovieHorizontalListview(
-          movies: nowPlayingMovies,
-          title: 'En cines',
-          subTitle: 'Lunes',
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const CustomAppbar(),
+          //Expanded hace que ya una ves teniendo nuestro padre, envuelve esto listvie a la altura y anchura necesaria
+          MoviesSlideshow(
+            movies: slideShowMovies,
+          ),
+          MovieHorizontalListview(
+            movies: nowPlayingMovies,
+            title: 'En cines',
+            subTitle: 'Lunes',
+            loadNextPage: () {
+              ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+            },
+          ),
+          MovieHorizontalListview(
+            movies: nowPlayingMovies,
+            title: 'En cines',
+            subTitle: 'Lunes',
+            loadNextPage: () {
+              ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+            },
+          ),
+          MovieHorizontalListview(
+            movies: nowPlayingMovies,
+            title: 'En cines',
+            subTitle: 'Lunes',
+            loadNextPage: () {
+              ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+            },
+          ),
+        ],
+      ),
     );
   }
 }
