@@ -29,47 +29,81 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   void initState() {
     ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedProvider.notifier).loadNextPage();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isLoading = ref.watch(isLoadingScreenProvider);
+    if (isLoading) return const CustomScreenLoading();
+
     final nowPlayingMovies = ref.watch(nowPlayinMoviesProvider);
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const CustomAppbar(),
-          //Expanded hace que ya una ves teniendo nuestro padre, envuelve esto listvie a la altura y anchura necesaria
-          MoviesSlideshow(
-            movies: slideShowMovies,
-          ),
-          MovieHorizontalListview(
-            movies: nowPlayingMovies,
-            title: 'En cines',
-            subTitle: 'Lunes',
-            loadNextPage: () {
-              ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+    final getPopularProvider = ref.watch(popularMoviesProvider);
+    final getUpcomingProvider = ref.watch(upcomingMoviesProvider);
+    final getTopRatedProvider = ref.watch(topRatedProvider);
+    //Con el customScrollView usamos Sliders
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(
+          floating: true,
+          title: CustomAppbar(),
+        ),
+        //Creamos nuestra lista de sliders
+        SliverList(
+          //Creamos el builder
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              //Retornamos el widget
+              return Column(
+                children: [
+                  //Expanded hace que ya una ves teniendo nuestro padre, envuelve esto listvie a la altura y anchura necesaria
+                  MoviesSlideshow(
+                    movies: slideShowMovies,
+                  ),
+                  MovieHorizontalListview(
+                    movies: nowPlayingMovies,
+                    title: 'En cines',
+                    subTitle: 'Lunes',
+                    loadNextPage: () {
+                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MovieHorizontalListview(
+                    movies: getPopularProvider,
+                    title: 'Populares',
+                    subTitle: 'Esta semana',
+                    loadNextPage: () {
+                      ref.read(popularMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MovieHorizontalListview(
+                    movies: getUpcomingProvider,
+                    title: 'Proximamente',
+                    subTitle: 'Hoy',
+                    loadNextPage: () {
+                      ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  MovieHorizontalListview(
+                    movies: getTopRatedProvider,
+                    title: 'Mejor calificadas',
+                    subTitle: 'Este mes',
+                    loadNextPage: () {
+                      ref.read(topRatedProvider.notifier).loadNextPage();
+                    },
+                  ),
+                ],
+              );
+              //Definimos la canidad de veces que queremos que se repitan los widgets de nuestro return xxxs
             },
+            childCount: 1,
           ),
-          MovieHorizontalListview(
-            movies: nowPlayingMovies,
-            title: 'En cines',
-            subTitle: 'Lunes',
-            loadNextPage: () {
-              ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
-            },
-          ),
-          MovieHorizontalListview(
-            movies: nowPlayingMovies,
-            title: 'En cines',
-            subTitle: 'Lunes',
-            loadNextPage: () {
-              ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
-            },
-          ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }
