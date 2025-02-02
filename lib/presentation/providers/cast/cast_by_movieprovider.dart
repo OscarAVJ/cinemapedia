@@ -22,8 +22,18 @@ class ActorsByMovieProvider
   }) : super({});
 
   Future<void> loadActors(String movieId) async {
+    // Si ya se cargaron actores para esta película, no hacer nada.
     if (state[movieId] != null) return;
+
+    // Intentar obtener los actores
     final actors = await getActors(movieId);
+
+    // Si no se encuentran actores, no actualizar el estado
+    if (actors.isEmpty) {
+      return;
+    }
+
+    // Actualizar el estado con los actores encontrados
     state = {...state, movieId: actors};
   }
 }

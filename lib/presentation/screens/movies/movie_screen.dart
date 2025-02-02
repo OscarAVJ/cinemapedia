@@ -74,36 +74,20 @@ class _MovieDetails extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  movie.posterPath,
-                  width: size.width * 0.4,
+          child: SizedBox(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  movie.title,
+                  style: textStyles.titleLarge,
                 ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              //Descripcion
-              SizedBox(
-                width: (size.width - 40) * 0.5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      movie.title,
-                      style: textStyles.titleLarge,
-                    ),
-                    Text(
-                      movie.overview,
-                    ),
-                  ],
+                Text(
+                  movie.overview,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Padding(
@@ -139,14 +123,27 @@ class _ActorsByMovie extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final actorsByMovie = ref.watch(actorsByMovieProvider);
-    // ignore: collection_methods_unrelated_type
+
+    // Si no hay datos para esta película, mostrar indicador de carga
     if (actorsByMovie[movieId] == null) {
-      return CircularProgressIndicator(strokeWidth: 2);
+      return const Center(
+        child: CircularProgressIndicator(strokeWidth: 2),
+      );
     }
+
     final actors = actorsByMovie[movieId];
-    if (actors == null) {
-      return CircularProgressIndicator(strokeWidth: 2);
+
+    // Si la lista de actores está vacía, mostramos el siguiente mensaje
+    if (actors == null || actors.isEmpty) {
+      return const Center(
+        child: Text(
+          'No se encontraron actores para esta película.',
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
     }
+
+    // Mostrar lista de actores
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -155,7 +152,7 @@ class _ActorsByMovie extends ConsumerWidget {
         itemBuilder: (context, index) {
           final actor = actors[index];
           return Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             width: 135,
             child: Column(
               children: [
@@ -166,11 +163,21 @@ class _ActorsByMovie extends ConsumerWidget {
                     height: 130,
                     width: 135,
                     fit: BoxFit.cover,
+                    //!Con error builder manejamos las imagenes que no tengan un path valido
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.error,
+                        size: 130,
+                        color: Colors.grey,
+                      );
+                    },
                   ),
                 ),
+                const SizedBox(height: 5),
                 Text(
                   actor.name,
                   maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
