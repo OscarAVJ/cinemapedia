@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends StatelessWidget {
+  ///Aca creamos el nombre de nuestro path
   static const name = 'home_screen';
 
   const HomeScreen({super.key});
@@ -17,7 +18,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-//Creamos nuestro statefull widget y luego lo pasamos a consumer para poder acceder a Riverpod
+///Creamos nuestro statefull widget y luego lo pasamos a consumer para poder acceder a Riverpod
 class _HomeView extends ConsumerStatefulWidget {
   const _HomeView();
 
@@ -28,6 +29,7 @@ class _HomeView extends ConsumerStatefulWidget {
 class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   void initState() {
+    ///Aca iniciamos nuestros providers para que al cargar se ejecuten los metodos y peticiones respecitva
     ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
     ref.read(popularMoviesProvider.notifier).loadNextPage();
     ref.read(upcomingMoviesProvider.notifier).loadNextPage();
@@ -37,30 +39,33 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    ///Con este provider verificamos si todos los loading ya han cargado
     final bool isLoading = ref.watch(isLoadingScreenProvider);
     if (isLoading) return const CustomScreenLoading();
 
+    ///Aca hacemos referencia a nuestros providers
     final nowPlayingMovies = ref.watch(nowPlayinMoviesProvider);
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
     final getPopularProvider = ref.watch(popularMoviesProvider);
     final getUpcomingProvider = ref.watch(upcomingMoviesProvider);
     final getTopRatedProvider = ref.watch(topRatedProvider);
-    //Con el customScrollView usamos Sliders
+
+    ///Con el customScrollView usamos Slivers
     return CustomScrollView(
       slivers: [
         const SliverAppBar(
           floating: true,
           title: CustomAppbar(),
         ),
-        //Creamos nuestra lista de sliders
+
+        ///Creamos nuestra lista de sliders
         SliverList(
-          //Creamos el builder
+          ///Creamos el builder
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              //Retornamos el widget
+              ///Retornamos el widget
               return Column(
                 children: [
-                  //Expanded hace que ya una ves teniendo nuestro padre, envuelve esto listvie a la altura y anchura necesaria
                   MoviesSlideshow(
                     movies: slideShowMovies,
                   ),

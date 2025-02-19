@@ -1,6 +1,7 @@
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+///Con esta variable lo que hacemos es ver si las peliculas estan cargadas para posteriormente mostrar nuestro homeView, caso contrario mostrariamos nuestro loading personalizado
 final isLoadingScreenProvider = Provider<bool>((ref) {
   final nowPlayingMovies = ref.watch(nowPlayinMoviesProvider).isEmpty;
   final slideShowMovies = ref.watch(moviesSlideshowProvider).isEmpty;

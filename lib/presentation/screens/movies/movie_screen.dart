@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/movies/movie_into_provider.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
@@ -67,45 +68,88 @@ class _MovieDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final textStyles = Theme.of(context).textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Información básica de la película
         Padding(
-          padding: EdgeInsets.all(8),
-          child: SizedBox(
+          padding: const EdgeInsets.all(12.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Título de la película
                 Text(
                   movie.title,
-                  style: textStyles.titleLarge,
+                  style: textStyles.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
+                const SizedBox(height: 8),
+                // Descripción
                 Text(
                   movie.overview,
+                  style: textStyles.bodySmall?.copyWith(
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.justify,
                 ),
               ],
             ),
           ),
         ),
+
+        // Géneros
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Text(
+            'Géneros',
+            style: textStyles.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Wrap(
-            children: [
-              ...movie.genreIds.map(
-                (gender) => Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: Chip(
-                    label: Text(gender),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
+            spacing: 10,
+            runSpacing: 8,
+            children: movie.genreIds.map((genre) {
+              return Chip(
+                label: Text(
+                  genre,
+                  style: const TextStyle(color: Colors.white),
                 ),
-              ),
-            ],
+                backgroundColor: Colors.blueGrey.shade700,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+
+        // Actores
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Text(
+            'Actores',
           ),
         ),
         _ActorsByMovie(
@@ -158,19 +202,21 @@ class _ActorsByMovie extends ConsumerWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    actor.profilePath,
-                    height: 130,
-                    width: 135,
-                    fit: BoxFit.cover,
-                    //!Con error builder manejamos las imagenes que no tengan un path valido
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.error,
-                        size: 130,
-                        color: Colors.grey,
-                      );
-                    },
+                  child: FadeInRight(
+                    child: Image.network(
+                      actor.profilePath,
+                      height: 130,
+                      width: 135,
+                      fit: BoxFit.cover,
+                      //!Con error builder manejamos las imagenes que no tengan un path valido
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.error,
+                          size: 130,
+                          color: Colors.grey,
+                        );
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -204,20 +250,16 @@ class _CustomSliverAppBar extends StatelessWidget {
       foregroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        // title: Text(
-        //   movie.title,
-        //   style: const TextStyle(
-        //     fontSize: 20,
-        //     color: Colors.white,
-        //   ),
-        //   textAlign: TextAlign.center,
-        // ),
         background: Stack(
           children: [
             SizedBox.expand(
               child: Image.network(
                 movie.posterPath,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) return const SizedBox();
+                  return FadeIn(child: child);
+                },
               ),
             ),
             const SizedBox.expand(

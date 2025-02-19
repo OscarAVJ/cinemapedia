@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 Future<void> main() async {
   //Gracias a el paquete flutterdotenv podemos acceder a nuestras variables de entorno
   await dotenv.load(fileName: '.env');
+  //! Con el providerScope le damos acceso a todo el arbol de widgets a Riverpod
   runApp(ProviderScope(child: MyApp()));
 }
 

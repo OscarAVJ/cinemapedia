@@ -34,6 +34,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
       () {
         if (widget.loadNextPage == null || isLoading) return;
 
+        ///Esta condicion nos sirve para poder anticiparnos 200pixeles antes a que l usuario llegue al final de nuestra lista actual, llamar al loadNextPage
         if ((scrollController.position.pixels + 200) >=
             scrollController.position.maxScrollExtent) {
           isLoading = true;
