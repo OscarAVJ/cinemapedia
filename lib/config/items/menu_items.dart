@@ -32,4 +32,10 @@ const cinemapediaMenuItems = <MenuItems>[
     route: '/config_screen',
     icons: Icons.settings,
   ),
+  MenuItems(
+    title: 'Log out',
+    subTitle: 'Log out',
+    route: '/config_screen',
+    icons: Icons.logout_outlined,
+  ),
 ];

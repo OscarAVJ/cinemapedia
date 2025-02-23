@@ -16,11 +16,13 @@ class MoviesSlideshow extends StatelessWidget {
       height: 210,
       width: double.infinity,
       child: Swiper(
-        //Con esto vemos un poco antes del slide
+        ///Con esto vemos un poco antes del slide
         viewportFraction: 0.8,
-        //Aca la transision
+
+        ///Aca la transision
         scale: 0.9,
-        //Que cambie auto
+
+        ///Que cambie auto
         autoplay: true,
         pagination: SwiperPagination(
           margin: const EdgeInsets.only(top: 0),

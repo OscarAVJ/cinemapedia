@@ -1,5 +1,5 @@
 import 'package:cinemapedia/domain/entities/movie.dart';
-import 'package:cinemapedia/presentation/providers/movies/movies_repository_provider.dart';
+import 'package:cinemapedia/presentation/providers/searchDelegate/search_provider.dart';
 import 'package:cinemapedia/presentation/screens/delegates/search_movie_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,12 +34,20 @@ class CustomAppbar extends ConsumerWidget {
             const Spacer(),
             IconButton(
               onPressed: () {
-                final movieRepository = ref.read(movieRepositoryImplProvider);
+                ///El movieRepository ya no lo usamos ya que como en nuestro savedMoviesProvider ya estamos haciendo referencia a el podemos utilizar el mismo provider y hacer referencia al metodo
+                //! final movieRepository = ref.read(movieRepositoryImplProvider);
+                final searchProvider = ref.read(searchMovieProvider);
+                final savedMovies = ref.read(savedMoviesProvider);
                 showSearch<Movie?>(
+                  query: searchProvider,
                   context: context,
-                  //El delegate es el que se encargara de trabajar la busqueda
+
+                  ///El delegate es el que se encargara de trabajar la busqueda
                   delegate: SearchMovieDelegate(
-                    searchMovies: movieRepository.searchMovies,
+                    initialMovies: savedMovies,
+                    searchMovies: ref
+                        .read(savedMoviesProvider.notifier)
+                        .searchedMoviesSave,
                   ),
                 ).then(
                   (movie) {
