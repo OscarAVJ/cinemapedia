@@ -16,7 +16,7 @@ class CustomBottomNavigationbar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.home_max,
+            Icons.category_outlined,
           ),
           label: 'Categorias',
         ),

@@ -1,0 +1,1 @@
+C:\dev\FlutterApps\cinemapedia\build\app\intermediates\cxx\Debug\4g4x513k\obj\arm64-v8a
