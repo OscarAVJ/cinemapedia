@@ -12,25 +12,78 @@ typedef SeachMoviesCallBack = Future<List<Movie>> Function(String query);
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
   final SeachMoviesCallBack searchMovies;
   StreamController<List<Movie>> debounceMovies = StreamController.broadcast();
+  StreamController<bool> isLoadingText = StreamController.broadcast();
+
+  List<Movie> initialMovies;
   //El timer sirve para determinar periodos de tiempo, asi como limpiarlo y cancelarlo
   Timer? debounceTimer;
   SearchMovieDelegate({
+    this.initialMovies = const [],
     required this.searchMovies,
   });
 
+  ///Con este metodo limpiamos nuestros streams asi no se quedan en el aire
+  void clearStreams() {
+    debounceMovies.close();
+  }
+
   void _onQueryChange(String query) {
-    //Aca especificamos que mientras no se deje de escribir y pasen 500 milisegundos no se ejecuta la peticion
+    ///Aca manejamos el loading de nuestro action
+    isLoadingText.add(true);
+
+    /// Si ya hay un Timer activo, lo cancelamos para reiniciar la espera
     if (debounceTimer?.isActive ?? false) debounceTimer!.cancel();
-    //Aca ya establecemos el tiempo
+
+    /// Creamos un nuevo Timer que esperará 1 segundo antes de ejecutar la búsqueda
     debounceTimer = Timer(
       const Duration(seconds: 1),
       () async {
+        /// Si el campo de búsqueda está vacío, limpiamos la lista de resultados y salimos
         if (query.isEmpty) {
-          debounceMovies.add([]);
+          if (!debounceMovies.isClosed) {
+            debounceMovies
+                .add([]); // Aseguramos que el StreamController esté abierto
+          }
           return;
         }
+
+        /// Llamamos a la función `searchMovies` para obtener las películas basadas en la consulta
         final movies = await searchMovies(query);
-        debounceMovies.add(movies);
+        initialMovies = movies;
+
+        /// Verificamos si el StreamController sigue abierto antes de agregar los resultados
+        if (!debounceMovies.isClosed) debounceMovies.add(movies);
+
+        ///Aca lo pasamos a false
+        isLoadingText.add(false);
+      },
+    );
+  }
+
+  //! Este metodo es el que tiene toda la logica de las sugerencias y respuestas
+  Widget resultAndSuggestions() {
+    return StreamBuilder(
+      //aca iniciamos el seachMovies y le pasamos el parametro
+      // future: searchMovies(query),
+      ///Aca colocamos la data inicial que seria lo que esta en nuestro provider enviado desde el appBar
+      //!Ahora como es un stream, pues ponemos el controllador de streams que hemos creado
+      initialData: initialMovies,
+      stream: debounceMovies.stream,
+      builder: (context, snapshot) {
+        final movies = snapshot.data ?? [];
+        return ListView.builder(
+          itemCount: movies.length,
+          itemBuilder: (context, index) {
+            final movie = movies[index];
+            return _MovieSearchItem(
+              movie: movie,
+              onMovieSelected: (context, movie) {
+                clearStreams();
+                close(context, movie);
+              },
+            );
+          },
+        );
       },
     );
   }
@@ -42,14 +95,41 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   List<Widget>? buildActions(Object context) {
     //query es el que tiene el valor del texbox
     return [
-      FadeIn(
-        animate: query.isNotEmpty,
-        child: IconButton(
-          onPressed: () => query = '',
-          icon: Icon(
-            Icons.clear,
-          ),
-        ),
+      StreamBuilder(
+        ///Iniciamos nuestra data como false
+        initialData: false,
+
+        ///Vinculamos nuestro stream
+        stream: isLoadingText.stream,
+        builder: (context, snapshot) {
+          ///Si nuestro stream es falso osea que si se esta escribiendo
+          if (snapshot.data ?? false) {
+            ///Si el query esta vacio
+            if (query.isNotEmpty) {
+              return SpinPerfect(
+                duration: Duration(seconds: 2),
+                infinite: true,
+                child: IconButton(
+                  onPressed: () => query = '',
+                  icon: Icon(
+                    Icons.refresh_outlined,
+                  ),
+                ),
+              );
+            }
+          }
+
+          ///Si el stream es true osea, que ya no se esta escribiendo
+          return FadeIn(
+            animate: query.isNotEmpty,
+            child: IconButton(
+              onPressed: () => query = '',
+              icon: Icon(
+                Icons.clear,
+              ),
+            ),
+          );
+        },
       ),
     ];
   }
@@ -58,7 +138,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   //Aca construimos lo que saldria a la izquierda
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      onPressed: () => close(context, null),
+      onPressed: () {
+        clearStreams();
+        close(context, null);
+      },
       icon: Icon(Icons.arrow_back_ios_new_outlined),
     );
   }
@@ -66,7 +149,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   @override
   //Aca serian los resultado de la busqueda
   Widget buildResults(BuildContext context) {
-    return Text('BuildResults');
+    return resultAndSuggestions();
   }
 
   @override
@@ -74,25 +157,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   Widget buildSuggestions(BuildContext context) {
     //Aca llamamos al metodo y le pasamos el valor del textbox
     _onQueryChange(query);
-    return StreamBuilder(
-      //aca iniciamos el seachMovies y le pasamos el parametro
-      // future: searchMovies(query),
-      //!Ahora como es un stream, pues ponemos el controllador de streams que hemos creado
-      stream: debounceMovies.stream,
-      builder: (context, snapshot) {
-        final movies = snapshot.data ?? [];
-        return ListView.builder(
-          itemCount: movies.length,
-          itemBuilder: (context, index) {
-            final movie = movies[index];
-            return _MovieSearchItem(
-              movie: movie,
-              onMovieSelected: close,
-            );
-          },
-        );
-      },
-    );
+    return resultAndSuggestions();
   }
 }
 
