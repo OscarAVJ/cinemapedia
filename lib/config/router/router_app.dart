@@ -1,3 +1,4 @@
+import 'package:cinemapedia/presentation/screens/config/config_screen.dart';
 import 'package:cinemapedia/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,5 +27,10 @@ final appRouter = GoRouter(
         ),
       ],
     ),
+    GoRoute(
+      path: '/config_screen',
+      name: ConfigScreen.name,
+      builder: (context, state) => ConfigScreen(),
+    )
   ],
 );

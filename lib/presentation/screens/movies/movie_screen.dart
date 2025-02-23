@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/movies/movie_into_provider.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:cinemapedia/presentation/providers/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -73,79 +74,14 @@ class _MovieDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Información básica de la película
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Título de la película
-                Text(
-                  movie.title,
-                  style: textStyles.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Descripción
-                Text(
-                  movie.overview,
-                  style: textStyles.bodySmall?.copyWith(
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.justify,
-                ),
-              ],
-            ),
-          ),
-        ),
+        /// Información básica de la película
+        _BasicMovieInfo(movie: movie, textStyles: textStyles),
 
-        // Géneros
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Text(
-            'Géneros',
-            style: textStyles.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 8,
-            children: movie.genreIds.map((genre) {
-              return Chip(
-                label: Text(
-                  genre,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                backgroundColor: Colors.blueGrey.shade700,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
+        /// Géneros
+        _GendersTitle(textStyles: textStyles),
+        _Genders(movie: movie),
 
-        // Actores
+        /// Actores
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Text(
@@ -156,6 +92,115 @@ class _MovieDetails extends StatelessWidget {
           movieId: movie.id.toString(),
         ),
       ],
+    );
+  }
+}
+
+class _BasicMovieInfo extends ConsumerWidget {
+  const _BasicMovieInfo({
+    required this.movie,
+    required this.textStyles,
+  });
+
+  final Movie movie;
+  final TextTheme textStyles;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color:
+              isDarkMode ? const Color.fromARGB(255, 31, 31, 31) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Título de la película
+            Text(
+              movie.title,
+              style: textStyles.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Descripción
+            Text(
+              movie.overview,
+              style: textStyles.bodySmall?.copyWith(
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+              textAlign: TextAlign.justify,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GendersTitle extends ConsumerWidget {
+  const _GendersTitle({
+    required this.textStyles,
+  });
+
+  final TextTheme textStyles;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Text(
+        'Géneros',
+        style: textStyles.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: isDarkMode ? Colors.white : Colors.black,
+        ),
+      ),
+    );
+  }
+}
+
+class _Genders extends StatelessWidget {
+  const _Genders({
+    required this.movie,
+  });
+
+  final Movie movie;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 8,
+        children: movie.genreIds.map((genre) {
+          return Chip(
+            label: Text(
+              genre,
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.blueGrey.shade700,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

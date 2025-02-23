@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/config/helpers/human_format.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/presentation/providers/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef SeachMoviesCallBack = Future<List<Movie>> Function(String query);
 
@@ -94,7 +96,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   }
 }
 
-class _MovieSearchItem extends StatelessWidget {
+class _MovieSearchItem extends ConsumerWidget {
   const _MovieSearchItem({
     required this.movie,
     required this.onMovieSelected,
@@ -104,7 +106,8 @@ class _MovieSearchItem extends StatelessWidget {
   final Function onMovieSelected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final textStyle = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
@@ -117,7 +120,9 @@ class _MovieSearchItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: colors.secondary,
+            color: isDarkMode
+                ? const Color.fromARGB(255, 50, 50, 50)
+                : colors.secondary,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -182,7 +187,8 @@ class _MovieSearchItem extends StatelessWidget {
                             ? '${movie.overview.substring(0, 100)}...'
                             : movie.overview,
                         style: textStyle.bodyMedium?.copyWith(
-                          color: Colors.grey.shade400,
+                          color:
+                              isDarkMode ? Colors.white : Colors.grey.shade400,
                         ),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,

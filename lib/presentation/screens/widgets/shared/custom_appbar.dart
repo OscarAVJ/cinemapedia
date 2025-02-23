@@ -23,10 +23,6 @@ class CustomAppbar extends ConsumerWidget {
         width: double.infinity,
         child: Row(
           children: [
-            Icon(
-              Icons.movie_filter_outlined,
-              color: colors.primary,
-            ),
             SizedBox(
               height: 5,
             ),
