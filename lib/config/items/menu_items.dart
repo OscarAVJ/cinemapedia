@@ -15,12 +15,6 @@ class MenuItems {
 
 const cinemapediaMenuItems = <MenuItems>[
   MenuItems(
-    title: 'Configuration',
-    subTitle: 'Config',
-    route: '/config_screen',
-    icons: Icons.settings,
-  ),
-  MenuItems(
     title: 'Categorias',
     subTitle: 'Config',
     route: '/config_screen',
@@ -29,8 +23,14 @@ const cinemapediaMenuItems = <MenuItems>[
   MenuItems(
     title: 'Favoritos',
     subTitle: 'Config',
-    route: '/config_screen',
+    route: '/favorites',
     icons: Icons.favorite,
+  ),
+  MenuItems(
+    title: 'Configuración',
+    subTitle: 'Config',
+    route: '/config_screen',
+    icons: Icons.settings,
   ),
   MenuItems(
     title: 'Log out',
