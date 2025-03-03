@@ -47,11 +47,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
             ),
             SizedBox(
-              width: 20,
+              width: 2,
             ),
-            Text(
-              'Oscar',
-              style: TextStyle(fontSize: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Oscar',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text(
+                  'Cinemapedia CEO',
+                  style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                ),
+              ],
             ),
           ],
         ),

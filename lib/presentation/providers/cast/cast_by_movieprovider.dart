@@ -1,5 +1,5 @@
 import 'package:cinemapedia/domain/entities/cast.dart';
-import 'package:cinemapedia/presentation/providers/cast/cast_repository_provider.dart';
+import '../../providers/providers.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
