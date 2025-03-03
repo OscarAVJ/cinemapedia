@@ -1,5 +1,12 @@
+import 'package:isar/isar.dart';
+part 'movie.g.dart';
+
 //Definimos nuestra entidad Movie
+@collection
 class Movie {
+  Id? isarId;
+
+  ///Con el Id? Isar autoincrementa auto
   final bool adult;
   final String backdropPath;
   final List<String> genreIds;
