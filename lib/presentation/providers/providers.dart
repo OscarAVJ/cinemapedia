@@ -7,3 +7,5 @@ export 'movies/movie_into_provider.dart';
 export 'cast/cast_repository_provider.dart';
 export 'theme/theme_provider.dart';
 export 'searchDelegate/search_provider.dart';
+export 'storage/favorite_movies_provider.dart';
+export 'storage/local_storage_provider.dart';

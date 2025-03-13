@@ -10,5 +10,5 @@ final moviesSlideshowProvider = Provider<List<Movie>>((ref) {
   if (nowPlayingMovies.isEmpty) return [];
 
   ///Y como nowPlayingMovies de por si ya esta retornando una lista, lo que hacemos es crear una sublista desde el elemento 12 hasta el siguiente
-  return nowPlayingMovies.sublist(12, 17);
+  return nowPlayingMovies.sublist(10, 17);
 });
