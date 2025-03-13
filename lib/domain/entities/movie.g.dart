@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-
+//!Este archivo no se toca manualmente desde su creacion
 part of 'movie.dart';
 
 // **************************************************************************

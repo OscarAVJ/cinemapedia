@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -277,28 +278,47 @@ class _ActorsByMovie extends ConsumerWidget {
   }
 }
 
-class _CustomSliverAppBar extends StatelessWidget {
+class _CustomSliverAppBar extends ConsumerWidget {
   final Movie movie;
   const _CustomSliverAppBar({
     required this.movie,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final size = MediaQuery.of(context).size;
-
+    final isFavoriteProvider = ref.watch(isMovieFavoriteProvider(movie.id));
     return SliverAppBar(
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.favorite_rounded,
-            color: Colors.red,
-          ),
-        ),
+            onPressed: () async {
+              /// Esperamos a que la función 'toogleFavorite' termine antes de continuar.
+              /// Esto evita que la UI se actualice antes de que Isar haya guardado el cambio.
+              await ref
+                  .read(favoriteMoviesProvider.notifier)
+                  .toogleFavorite(movie);
+
+              /// Una vez que 'toogleFavorite' ha terminado y la base de datos está actualizada,
+              /// invalidamos el provider para forzar la actualización de la UI con los nuevos datos.
+              ref.invalidate(isMovieFavoriteProvider(movie.id));
+            },
+
+            ///When es util para este tipo de peticiones puesto que cuando la data sea true nos muestra algo o en caso contrario otro
+            icon: isFavoriteProvider.when(
+              loading: () => CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+              data: (data) => data
+                  ? Icon(
+                      Icons.favorite_rounded,
+                      color: Colors.red,
+                    )
+                  : Icon(Icons.favorite_border),
+              error: (_, __) => throw UnimplementedError(),
+            )),
       ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),

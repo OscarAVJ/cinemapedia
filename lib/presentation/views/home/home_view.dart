@@ -101,7 +101,8 @@ class HomeViewState extends ConsumerState<HomeView> {
                     ),
                   ],
                 );
-                //Definimos la canidad de veces que queremos que se repitan los widgets de nuestro return xxxs
+
+                ///Definimos la canidad de veces que queremos que se repitan los widgets de nuestro return xxxs
               },
               childCount: 1,
             ),
