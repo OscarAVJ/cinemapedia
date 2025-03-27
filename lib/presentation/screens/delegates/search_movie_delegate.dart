@@ -171,7 +171,7 @@ class _MovieSearchItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    bool isDarkMode = ref.watch(darkModeProvider);
     final textStyle = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;

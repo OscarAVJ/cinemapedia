@@ -22,12 +22,12 @@ class ConfigScreen extends ConsumerWidget {
 
 class _ConfigItems extends ConsumerWidget {
   @override
-  Widget build(BuildContext context, ref) {
-    final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 👈 Corregido: WidgetRef explícito
     return Column(
       children: [
-        _DarkMode(isDarkMode: isDarkMode),
-        _LanguajeMode(),
+        const _DarkMode(), // 👈 Ya no necesita `isDarkMode`
+        const _LanguajeMode(),
       ],
     );
   }
@@ -70,19 +70,20 @@ class _LanguajeModeState extends ConsumerState<_LanguajeMode> {
 }
 
 class _DarkMode extends ConsumerWidget {
-  const _DarkMode({
-    required this.isDarkMode,
-  });
-
-  final bool isDarkMode;
+  const _DarkMode();
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 👈 Corregido: ref explícito
+    final isDarkMode =
+        ref.watch(darkModeProvider); // 👈 Ahora obtiene el estado aquí
+
     return SwitchListTile(
-        title: const Text('Modo oscuro'),
-        subtitle: const Text('Controles adicionales'),
-        value: isDarkMode,
-        onChanged: (value) =>
-            ref.read(themeNotifierProvider.notifier).toogleDarkMode());
+      title: const Text('Modo oscuro'),
+      subtitle: const Text('Controles adicionales'),
+      value: isDarkMode,
+      onChanged: (value) =>
+          ref.read(darkModeProvider.notifier).toggleDarkMode(),
+    );
   }
 }

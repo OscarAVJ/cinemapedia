@@ -5,18 +5,19 @@ class AppTheme {
 
   AppTheme({this.isDarkMode = false});
 
-  ///Aca definimos nuestro tema
+  /// Definimos nuestro tema
   ThemeData getTheme() => ThemeData(
-        brightness: isDarkMode ? Brightness.dark : Brightness.light,
         useMaterial3: true,
+        brightness:
+            isDarkMode ? Brightness.dark : Brightness.light, // 👈 Agregar esto
         colorSchemeSeed: const Color(0xFF2862F5),
       );
+
+  /// Permite copiar el estado actual del tema con modificaciones
   AppTheme copyWith({
-    ///Aca ponemos como argumento selected color y isDarkMode con la posibilidad de que sean nulos
     bool? isDarkMode,
   }) =>
       AppTheme(
-        ///Aca si recibimos el valor le ponemos el valor y si no el que viene por defecto en la clase
         isDarkMode: isDarkMode ?? this.isDarkMode,
       );
 }

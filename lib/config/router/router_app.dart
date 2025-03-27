@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:cinemapedia/presentation/views/home/popular_view.dart';
 import 'package:cinemapedia/presentation/screens/screens.dart';
 import 'package:cinemapedia/presentation/views/home/favorites_view.dart';
 import 'package:cinemapedia/presentation/views/home/home_view.dart';
@@ -43,9 +43,9 @@ final appRouter = GoRouter(
         ///! Segunda pestaña: CATEGORÍAS (Por ahora un placeholder)
         StatefulShellBranch(routes: [
           GoRoute(
-            path: '/categories',
-            name: 'categories',
-            builder: (context, state) => const Placeholder(),
+            path: '/popular',
+            name: 'popular',
+            builder: (context, state) => const PopularView(),
           ),
         ]),
 

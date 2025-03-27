@@ -59,7 +59,9 @@ class FavoritesViewState extends ConsumerState<FavoritesView> {
             ),
             Text(
               'No tienes peliculas favoritas',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+              style: TextStyle(
+                fontSize: 15,
+              ),
             ),
             SizedBox(
               height: 20,

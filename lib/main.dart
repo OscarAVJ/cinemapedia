@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/theme/theme_app.dart';
 import 'package:cinemapedia/presentation/providers/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cinemapedia/config/router/router_app.dart';
@@ -14,17 +15,17 @@ Future<void> main() async {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, ref) {
-    final themeProvider = ref.watch(themeNotifierProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(darkModeProvider);
+    final theme = AppTheme(isDarkMode: isDarkMode); // 👈 Pasamos el estado
+
     return MaterialApp.router(
-      //!Gracias a esto sabemos que nuestra primera ruta es el home_screen
       routerConfig: appRouter,
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: themeProvider.getTheme(),
-      // theme: AppTheme().getTheme(),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      theme: theme.getTheme(), // 👈 Usamos la función corregida
     );
   }
 }

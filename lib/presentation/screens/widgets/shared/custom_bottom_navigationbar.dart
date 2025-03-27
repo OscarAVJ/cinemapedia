@@ -27,9 +27,9 @@ class CustomBottomNavigationbar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.category_outlined,
+            Icons.grade_sharp,
           ),
-          label: 'Categorias',
+          label: 'Populares',
         ),
         BottomNavigationBarItem(
           icon: Icon(

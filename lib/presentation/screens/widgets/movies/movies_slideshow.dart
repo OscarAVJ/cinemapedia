@@ -49,7 +49,7 @@ class _Slide extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    bool isDarkMode = ref.watch(darkModeProvider);
     final decoration =
         BoxDecoration(borderRadius: BorderRadius.circular(20), boxShadow: [
       if (isDarkMode)

@@ -106,7 +106,7 @@ class _BasicMovieInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    bool isDarkMode = ref.watch(darkModeProvider);
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Container(
@@ -143,6 +143,13 @@ class _BasicMovieInfo extends ConsumerWidget {
               ),
               textAlign: TextAlign.justify,
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Fecha de estreno: ${movie.releaseDate.year}-${movie.releaseDate.month}-${movie.releaseDate.day}',
+              style: textStyles.bodySmall,
+            ),
           ],
         ),
       ),
@@ -159,7 +166,7 @@ class _GendersTitle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    bool isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    bool isDarkMode = ref.watch(darkModeProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Text(
