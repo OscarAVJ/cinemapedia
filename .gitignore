@@ -1,5 +1,7 @@
 .env
-# Miscellaneous
+# Ignorar archivos generados por Gradle y CMake en Android
+android/app/.cxx/
+*.bin# Miscellaneous
 *.class
 *.log
 *.pyc
