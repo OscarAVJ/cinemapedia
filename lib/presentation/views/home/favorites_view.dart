@@ -77,12 +77,10 @@ class FavoritesViewState extends ConsumerState<FavoritesView> {
       );
     }
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: MovieMasonry(
-          movies: movies,
-          loadNextPage: loadNextPage,
-        ),
+      appBar: AppBar(),
+      body: MovieMasonry(
+        movies: movies,
+        loadNextPage: loadNextPage,
       ),
     );
   }
