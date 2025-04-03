@@ -127,11 +127,20 @@ class _Slide extends StatelessWidget {
                       ),
                     );
                   }
+
                   return GestureDetector(
                     onTap: () => context.push(
                       '/movie/${movie.id}',
                     ),
                     child: FadeIn(child: child),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300], // ✅ Placeholder background
+                    child: const Icon(Icons.broken_image,
+                        size: 50,
+                        color: Colors.grey), // ✅ Displays broken image icon
                   );
                 },
               ),

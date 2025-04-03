@@ -1,6 +1,7 @@
 //Es abtracta por que no queremos crear instancias de esta clase
 //Aca definimos los metodos que seran usados y sera nuestro origen de datos
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/video.dart';
 
 abstract class MovieDatasource {
   Future<List<Movie>> getNowPlaying({int page = 1});
@@ -9,4 +10,6 @@ abstract class MovieDatasource {
   Future<List<Movie>> getTopRated({int page = 1});
   Future<Movie> getMovieById(String id);
   Future<List<Movie>> searchMovies(String query);
+  Future<List<Movie>> getSimilarMovies(int movieId);
+  Future<List<Video>> getYoutubeVideosById(int movieId);
 }

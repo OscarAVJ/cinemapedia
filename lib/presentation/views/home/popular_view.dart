@@ -15,14 +15,17 @@ class PopularViewState extends ConsumerState<PopularView> {
   @override
   Widget build(BuildContext context) {
     final getPopular = ref.watch(popularMoviesProvider);
+    final moviesNotifier = ref.read(popularMoviesProvider.notifier);
 
     return Scaffold(
+      appBar: AppBar(),
       body: MovieMasonry(
         movies: getPopular,
-        loadNextPage: () {
-          if (getPopular.isEmpty) return;
-          ref.read(popularMoviesProvider.notifier).loadNextPage();
-        },
+        loadNextPage: moviesNotifier.hasMore
+            ? () {
+                ref.read(popularMoviesProvider.notifier).loadNextPage();
+              }
+            : null,
       ),
     );
   }

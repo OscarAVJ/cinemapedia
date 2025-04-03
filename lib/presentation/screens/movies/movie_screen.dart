@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:cinemapedia/presentation/screens/widgets/movies/movie_similar.dart';
+import 'package:cinemapedia/presentation/screens/widgets/movies/movie_videos.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,6 +91,17 @@ class _MovieDetails extends StatelessWidget {
         ),
         _ActorsByMovie(
           movieId: movie.id.toString(),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        MovieVideos(movieId: movie.id),
+        SizedBox(
+          height: 20,
+        ),
+        SimilarMovies(movieId: movie.id),
+        SizedBox(
+          height: 20,
         ),
       ],
     );
@@ -256,15 +269,16 @@ class _ActorsByMovie extends ConsumerWidget {
                   child: FadeInRight(
                     child: Image.network(
                       actor.profilePath,
+                      filterQuality: FilterQuality.high,
                       height: 130,
                       width: 135,
                       fit: BoxFit.cover,
                       //!Con error builder manejamos las imagenes que no tengan un path valido
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.error,
-                          size: 130,
-                          color: Colors.grey,
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.broken_image,
+                              size: 50, color: Colors.grey),
                         );
                       },
                     ),

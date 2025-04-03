@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/screens/widgets/movies/movie_poster_link.dart';
 import 'package:flutter/material.dart';
@@ -15,28 +17,29 @@ class MovieMasonry extends StatefulWidget {
 class _MovieMasonryState extends State<MovieMasonry> {
   final scrollController = ScrollController();
   bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(
-      () {
-        if (widget.movies.isEmpty) return;
+    scrollController.addListener(() {
+      if (widget.movies.isEmpty || widget.loadNextPage == null || isLoading) {
+        return;
+      }
 
-        if (widget.loadNextPage == null) return;
+      if ((scrollController.position.pixels + 100) >=
+          scrollController.position.maxScrollExtent) {
+        isLoading = true;
 
-        if ((scrollController.position.pixels + 100) >=
-            scrollController.position.maxScrollExtent) {
-          isLoading = true;
-          widget.loadNextPage!();
-          Future.delayed(
-            Duration(milliseconds: 500),
-            () {
+        widget.loadNextPage!();
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            setState(() {
               isLoading = false;
-            },
-          );
-        }
-      },
-    );
+            });
+          }
+        });
+      }
+    });
   }
 
   @override
